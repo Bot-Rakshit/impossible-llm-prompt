@@ -1,11 +1,11 @@
-# Problem 2 — Glicko-2 Rating Calculator
+# Problem 2 — CIEDE2000 Color Difference
 
-Implement the Glicko-2 rating system for two-player games.
+Implement the CIEDE2000 perceptual color difference formula for CIELAB colors.
 
 ## What Is Included
 
 - `PROMPT.md`: the task prompt you give to an LLM.
-- `test.py`: the validation suite (9 tests, 54+ numerical assertions with tight tolerances).
+- `test.py`: the validation suite (12 tests, 34 reference pairs + property tests, ±0.0001 tolerance).
 
 ## Usage
 
@@ -15,12 +15,8 @@ Implement the Glicko-2 rating system for two-player games.
 
 ## Why This Is Hard
 
-- Multi-step iterative algorithm with convergence requirements.
-- Tests verify ratings to ±0.005, deviations to ±0.00005, volatility to ±0.0000001.
-- Floating-point errors compound across steps.
-- Scale conversions between display and internal representations.
-
-## Origin / Attribution
-
-Test cases derived from [lichess-org/scalachess](https://github.com/lichess-org/scalachess)
-(`test-kit/src/test/scala/rating/glicko/GlickoCalculatorTest.scala`).
+- 22+ intermediate variables with intricate interdependencies.
+- Hue angle edge cases when chroma is zero or near zero.
+- Mean hue calculation across the 0°/360° boundary.
+- Rotation term coupling chroma and hue contributions.
+- Tests use published reference data with 4-decimal-place precision.
