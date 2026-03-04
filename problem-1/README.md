@@ -1,25 +1,22 @@
-# Impossible LLM Prompt
+# Problem 1 — Cribbage Hand Scorer
 
-This repository is a benchmark prompt + test harness for evaluating new LLMs on both:
-
-- coding ability (implementing a non-trivial Python codebase from requirements), and
-- chess tactical reasoning (detecting puzzle motifs from positions and move lines).
+Implement a cribbage hand scoring calculator.
 
 ## What Is Included
 
-- `PROMPT.md`: the task prompt you can give to an LLM.
-- `test.py`: the validation suite used to score whether the generated implementation works.
+- `PROMPT.md`: the task prompt you give to an LLM.
+- `test.py`: the validation suite (30+ tests, 70+ assertions).
 
-The intended flow is:
+## Usage
 
 1. Give `PROMPT.md` to an LLM.
-2. Save its generated implementation (for example as `solution.py`) in this repo.
-3. Run `python3 -m unittest -v test.py`.
+2. Save its generated implementation as `solution.py` in this directory.
+3. Run `python3 -m unittest -v test.py` from this directory.
 
-## Origin / Attribution
+## Why This Is Hard
 
-This benchmark is derived from the tactical tagging logic and tests from the Lichess puzzler project:
-
-- Original repository: [ornicar/lichess-puzzler](https://github.com/ornicar/lichess-puzzler)
-
-This repo repackages the idea as a standalone LLM evaluation setup.
+- Five interacting scoring categories that must all be correct.
+- Fifteens require enumerating all 2^5 - 1 subsets and checking sums.
+- Run detection must handle duplicate ranks correctly (multiply, don't double-count).
+- Double-double runs, triple runs, and runs with gaps are common failure points.
+- Crib vs non-crib flush rules differ subtly.

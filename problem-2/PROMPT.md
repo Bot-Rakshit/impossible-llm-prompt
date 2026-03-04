@@ -1,51 +1,51 @@
-Build a Glicko-2 rating calculator for two-player games that passes all tests in `test.py`.
+Build a CIEDE2000 color difference calculator that passes all tests in `test.py`.
 
 ## Task
 
-- Implement a `compute_game` function in a single `solution.py` file.
-- Given two players' current ratings, compute their updated ratings after a game.
-- Each player has three properties: a rating (skill estimate), a rating deviation
-  (uncertainty in the rating), and a volatility (expected fluctuation).
-- After a game, both players are updated independently — each treats the other as
-  their sole opponent.
+- Implement a `ciede2000` function in a single `solution.py` file.
+- Given two colors in the CIELAB color space, compute their perceptual color
+  difference using the CIEDE2000 formula.
+- Each color is specified by three coordinates: L* (lightness, 0–100),
+  a* (green–red axis), and b* (blue–yellow axis).
 
 ## Function Signature
 
 ```python
-def compute_game(white, black, outcome, tau=0.75, skip_deviation_increase=False):
+def ciede2000(L1, a1, b1, L2, a2, b2, kL=1.0, kC=1.0, kH=1.0):
     """
-    Compute new Glicko-2 ratings for both players after a single game.
+    Compute the CIEDE2000 color difference between two CIELAB colors.
 
     Args:
-        white: dict with keys "rating", "deviation", "volatility"
-        black: dict with keys "rating", "deviation", "volatility"
-        outcome: str, one of "white" (white wins), "black" (black wins), "draw"
-        tau: float, system constant controlling volatility change (default 0.75)
-        skip_deviation_increase: bool, if True treat elapsed rating periods as 0;
-                                  otherwise elapsed rating periods = 1 (default False)
+        L1, a1, b1: CIELAB values for the first color
+        L2, a2, b2: CIELAB values for the second color
+        kL, kC, kH: parametric weighting factors (default 1.0)
 
     Returns:
-        tuple of (white_result, black_result), each a dict with keys
-        "rating", "deviation", "volatility"
+        float: the CIEDE2000 color difference (ΔE00)
     """
 ```
 
 ## Key Details
 
-- The algorithm operates on an internal scale. Convert between the display scale and
-  the internal scale using these constants:
-  - `MULTIPLIER = 173.7178`
-  - `DEFAULT_RATING = 1500.0`
-- The volatility update uses an iterative root-finding procedure. Use a convergence
-  tolerance of `0.000001` and a maximum of `1000` iterations.
-- Game scores: win = 1.0, loss = 0.0, draw = 0.5 (from each player's perspective).
+- The formula uses `25**7 = 6103515625` as a reference constant for chroma
+  calculations.
+- `kL`, `kC`, `kH` are parametric weighting factors, typically all 1.0.
+- The result must match published reference values to ±0.0001.
+- The formula involves converting between Cartesian (a*, b*) and polar (chroma,
+  hue angle) representations.
+- Special care is needed when:
+  - One or both chroma values are zero (hue angle is undefined).
+  - Hue angles cross the 0°/360° boundary (mean hue and hue difference
+    calculations).
+- The formula includes a rotation term that couples the chroma and hue difference
+  contributions.
 
 ## Technical Constraints
 
 - Language: Python 3.
 - Only standard library imports (`math`, etc.) — no external packages.
 - Deterministic behavior only.
-- Do not hardcode expected test values or specific player ratings.
+- Do not hardcode expected test values.
 - Do not modify `test.py`.
 
 ## Acceptance
